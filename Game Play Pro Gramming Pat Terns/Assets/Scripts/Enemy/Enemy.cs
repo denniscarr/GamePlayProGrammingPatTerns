@@ -164,13 +164,17 @@ public abstract class Enemy : MonoBehaviour {
 
         bool willDie = false;
         if (currentHealth <= 0) {
+            Services.hitPause.StartHitPause(0.2f);
             willDie = true;
         }
 
         Vector3 knockbackDirection = transform.position - PlayerController.m_Transform.position;
         knockbackDirection.z = 0f;
+
         float knockbackDistance = 2.5f;
+        if (willDie) { knockbackDistance = 5f; }
         float distanceKnocked = 0f;
+
         m_State = State.Knockback;
 
         yield return new WaitUntil(() => {

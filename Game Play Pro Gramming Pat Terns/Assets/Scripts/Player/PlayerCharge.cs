@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerCharge : MonoBehaviour {
 
+    [SerializeField] GameObject enemyHitParticles;
+
     [SerializeField] float chargeSpeed = 200f;
     [SerializeField] float chargeLength = 3f;
     [SerializeField] float chargeCooldown = 1f;
@@ -52,6 +54,8 @@ public class PlayerCharge : MonoBehaviour {
 
         isCharging = false;
         GetComponent<PlayerController>().isAcceptingInput = true;
+        GetComponent<PlayerHealthController>().ActivateInvincibility();
+
         chargingMesh.SetActive(false);
         normalMesh.SetActive(true);
 
@@ -61,6 +65,8 @@ public class PlayerCharge : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.GetComponent<Enemy>() && isCharging) {
+            Vector3 hitLocation = other.ClosestPoint(transform.position);
+            Instantiate(enemyHitParticles, hitLocation, Quaternion.identity);
             other.GetComponent<Enemy>().GetHitByCharge();
         }
     }

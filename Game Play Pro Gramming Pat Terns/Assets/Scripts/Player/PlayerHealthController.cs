@@ -6,6 +6,9 @@ public class PlayerHealthController : MonoBehaviour {
 
     [SerializeField] GameObject mesh;
 
+    [SerializeField] float maxInvincibilityFrames = 0.4f;
+    float currentInvincibilityFrames;
+
     PlayerController playerController;
     PlayerCharge chargeController;
 
@@ -16,7 +19,18 @@ public class PlayerHealthController : MonoBehaviour {
     }
 
 
+    private void Update() {
+        maxInvincibilityFrames -= Time.deltaTime;
+    }
+
+    
+    public void ActivateInvincibility() {
+        currentInvincibilityFrames = maxInvincibilityFrames;
+    }
+
+
     public void Die() {
+        if (maxInvincibilityFrames > 0) { return; }
         mesh.SetActive(false);
         playerController.isAcceptingInput = false;
     }
