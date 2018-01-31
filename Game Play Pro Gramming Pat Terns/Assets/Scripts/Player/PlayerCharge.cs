@@ -11,13 +11,16 @@ public class PlayerCharge : MonoBehaviour {
     [SerializeField] GameObject normalMesh;
     [SerializeField] AudioSource m_AudioSource;
 
+    [HideInInspector] public bool isCharging;
     float cooldownTimer;
     Rigidbody m_Rigidbody;
+
 
     private void Awake() {
         m_Rigidbody = GetComponent<Rigidbody>();
         cooldownTimer = chargeCooldown;
     }
+
 
     private void Update() {
         cooldownTimer += Time.deltaTime;
@@ -27,8 +30,10 @@ public class PlayerCharge : MonoBehaviour {
         }
     }
 
+
     IEnumerator Charge() {
         GetComponent<PlayerController>().isAcceptingInput = false;
+        isCharging = true;
         float distanceCharged = 0f;
         normalMesh.SetActive(false);
         chargingMesh.SetActive(true);
@@ -45,10 +50,18 @@ public class PlayerCharge : MonoBehaviour {
             }
         });
 
+        isCharging = false;
         GetComponent<PlayerController>().isAcceptingInput = true;
         chargingMesh.SetActive(false);
         normalMesh.SetActive(true);
 
         yield return null;
+    }
+
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.GetComponent<Enemy>() && isCharging) {
+            other.GetComponent<Enemy>().GetHitByCharge();
+        }
     }
 }

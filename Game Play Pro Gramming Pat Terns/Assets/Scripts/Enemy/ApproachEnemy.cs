@@ -27,7 +27,4 @@ public class ApproachEnemy : Enemy {
             rotator.freezeRotation = false;
         }
     }
-
-    protected override void Die() {
-    }
 }

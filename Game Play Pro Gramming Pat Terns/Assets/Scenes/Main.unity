@@ -776,6 +776,7 @@ GameObject:
   - component: {fileID: 897886207}
   - component: {fileID: 897886210}
   - component: {fileID: 897886211}
+  - component: {fileID: 897886212}
   - component: {fileID: 897886209}
   - component: {fileID: 897886208}
   m_Layer: 0
@@ -858,6 +859,19 @@ MonoBehaviour:
   chargingMesh: {fileID: 860705850}
   normalMesh: {fileID: 1826575948}
   m_AudioSource: {fileID: 1896515290}
+  isCharging: 0
+--- !u!114 &897886212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 897886206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34bfe5b8e9a74244bef65b62b643568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 488498824}
 --- !u!1 &983303686
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,7 +1006,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1051885194962162, guid: e6a29fec4d6742845a2d1f2f3f792ddd, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e6a29fec4d6742845a2d1f2f3f792ddd, type: 2}
@@ -1770,6 +1784,11 @@ Prefab:
     - target: {fileID: 4372901093459860, guid: 79a29db4f361d2241af5c2de79db8167, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114089991745945912, guid: 79a29db4f361d2241af5c2de79db8167,
+        type: 2}
+      propertyPath: knockbackSpeed
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 79a29db4f361d2241af5c2de79db8167, type: 2}
