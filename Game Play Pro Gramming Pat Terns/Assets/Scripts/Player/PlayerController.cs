@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-
     [SerializeField] float movementSpeed;
 
     [HideInInspector] public bool isAcceptingInput = true;
+    public static Transform m_Transform;
 
     Vector3 directionalInput;
     Rigidbody m_Rigidbody;
 
 
     private void Start() {
+        m_Transform = transform;
         m_Rigidbody = GetComponent<Rigidbody>();
     }
 

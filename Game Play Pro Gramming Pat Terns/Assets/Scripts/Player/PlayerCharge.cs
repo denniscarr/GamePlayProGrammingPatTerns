@@ -34,15 +34,12 @@ public class PlayerCharge : MonoBehaviour {
         chargingMesh.SetActive(true);
         m_AudioSource.Play();
 
-        Debug.Log("charging");
-
         yield return new WaitUntil(() => {
             if (chargeLength - distanceCharged <= 0.1f) {
                 return true;
             } else {
                 Vector3 newPosition = transform.position + transform.forward * chargeSpeed * Time.deltaTime;
                 distanceCharged += Vector3.Distance(transform.position, newPosition);
-                Debug.Log("distance charged: " + distanceCharged);
                 m_Rigidbody.MovePosition(newPosition);
                 return false;
             }

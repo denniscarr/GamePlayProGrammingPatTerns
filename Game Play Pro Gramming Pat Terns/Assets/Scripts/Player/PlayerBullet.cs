@@ -6,11 +6,14 @@ public class PlayerBullet : MonoBehaviour {
 
     [SerializeField] float speed = 30f;
     [SerializeField] float spread = 10f;
+    [SerializeField] PerlinNoise wiggleNoise;
+    [SerializeField] GameObject hitEnemyParticlesPrefab;
+    [SerializeField] GameObject hitStunnedEnemyParticlesPrefab;
 
-    Plane movementPlane;
     Vector3 direction;
-
     Rigidbody m_Rigidbody;
+
+    Vector3 lastPosition;
 
     private void Awake() {
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -18,24 +21,22 @@ public class PlayerBullet : MonoBehaviour {
 
     private void Start() {
         // Get direction based on mouse position.
-        movementPlane = new Plane(transform.position, transform.position + transform.up, transform.position + transform.right);
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float planeRaycastDistance;
-        if (movementPlane.Raycast(mouseRay, out planeRaycastDistance)) {
-            Vector3 mousePoint = mouseRay.origin + mouseRay.direction * planeRaycastDistance;
-            direction = Vector3.Normalize(mousePoint - transform.position);
-            direction = Quaternion.Euler(0, 0, Random.Range(-spread, spread)) * direction;
-        }
+        Plane movementPlane = new Plane(transform.position, transform.position + transform.up, transform.position + transform.right);
+        Vector3 mousePoint = MouseUtil.ProjectMousePositionOntoPlane(movementPlane);
+        direction = Vector3.Normalize(mousePoint - transform.position);
+        direction = Quaternion.Euler(0, 0, Random.Range(-spread, spread)) * direction;
+        wiggleNoise = new PerlinNoise(0.5f);
+    }
 
-        // If the player somehow clicked off the screen, get destroyed.
-        else {
-            Debug.LogError("Bullet tried to get aimed off screen.");
-            Destroy(gameObject);
-        }
+    private void Update() {
+        wiggleNoise.Iterate();
     }
 
     private void FixedUpdate() {
+        lastPosition = transform.position;
+
         // Move to new position.
+        direction = Quaternion.Euler(0f, 0f, MyMath.Map(wiggleNoise.value.x, 0f, 1f, -spread, spread)) * direction;
         Vector3 newPosition = transform.position + direction * speed * Time.fixedDeltaTime;
         m_Rigidbody.MovePosition(newPosition);
 
@@ -44,4 +45,17 @@ public class PlayerBullet : MonoBehaviour {
             Destroy(gameObject);
         }
     }
+
+    private void OnTriggerEnter(Collider collider) {
+        if (collider.GetComponent<Enemy>() != null) {
+            collider.GetComponent<Enemy>().GetHitByBullet();
+            if (collider.GetComponent<Enemy>().m_State == Enemy.State.Stunned) {
+                Instantiate(hitStunnedEnemyParticlesPrefab, lastPosition, Quaternion.identity);
+            } else {
+                Instantiate(hitEnemyParticlesPrefab, lastPosition, Quaternion.identity);
+            }
+            Destroy(gameObject);
+        }
+    }
+
 }
