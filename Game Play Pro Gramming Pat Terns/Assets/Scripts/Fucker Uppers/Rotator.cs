@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rotator : MonoBehaviour {
 
-    [SerializeField] Vector3 relativeSpeed = new Vector3(1f, 1f, 1f);
+    public Vector3 relativeSpeed = new Vector3(1f, 1f, 1f);
 
     [HideInInspector] public bool freezeRotation;
 

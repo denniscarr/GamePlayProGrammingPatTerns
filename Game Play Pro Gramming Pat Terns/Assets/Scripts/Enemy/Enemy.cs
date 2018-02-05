@@ -7,6 +7,7 @@ public abstract class Enemy : MonoBehaviour {
     [SerializeField] protected EnemyStats m_Stats;
     [SerializeField] protected GameObject getStunnedParticlesPrefab;
     [SerializeField] protected GameObject recoverFromStunParticlesPrefab;
+    [SerializeField] protected GameObject deathParticles;
     [SerializeField] protected float knockbackSpeed = 100f;
 
     public enum State { Normal, Stunned, Knockback }
@@ -77,17 +78,19 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     protected virtual void Die() {
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Camera.main.GetComponent<ScreenShake>().SetShake(0.4f, 0.2f);
         Destroy(gameObject);
     }
 
 
     // Tool methods:
-    protected void SteerTowards(Vector3 target) {
+    protected Vector3 SteerTowards(Vector3 target) {
         m_Rigidbody.velocity = Vector3.ClampMagnitude(m_Rigidbody.velocity, m_Stats.maxSpeed);
         Vector3 desiredVelocity = Vector3.Normalize(target - transform.position);
         desiredVelocity *= m_Stats.maxSpeed;
         Vector3 turnForce = desiredVelocity - m_Rigidbody.velocity;
-        m_Rigidbody.AddForce(turnForce * m_Stats.accelerateSpeed * Time.fixedDeltaTime, ForceMode.Force);
+        return (turnForce);
     }
 
 
@@ -194,7 +197,7 @@ public abstract class Enemy : MonoBehaviour {
             yield return null;
         }
 
-        if (m_State == State.Stunned) {
+        if (m_State != State.Stunned) {
             m_State = State.Normal;
         }
         

@@ -5,7 +5,7 @@ AnimatorController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Approach Enemy
+  m_Name: Teleport Enemy
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Hurt Trigger
@@ -156,7 +156,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Approach Enemy Stunned
+  m_Name: Teleport Enemy Stunned
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -169,7 +169,7 @@ AnimatorState:
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b815ddd980e2d274089e9213d8be4fff, type: 2}
+  m_Motion: {fileID: 7400000, guid: bcb9b5bf6499a3e41830b7ace4a290e2, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -205,7 +205,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Approach Enemy Hurt
+  m_Name: Teleport Enemy Hurt
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -219,7 +219,7 @@ AnimatorState:
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 26b2bab4e452b5b43991914807439138, type: 2}
+  m_Motion: {fileID: 7400000, guid: e4f73d3ebd1d5aa4b9c9752fc2f40c7c, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
