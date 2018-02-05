@@ -7,25 +7,19 @@ public class TeleportEnemy : Enemy {
     bool chooseNewPoint = true;
     Coroutine movementCoroutine;
 
-    protected override void Update() {
-        base.Update();
+    public override void Run() {
+        base.Run();
     }
 
 
-    protected override void Spawn() {
+    public override void Spawn() {
     }
 
 
     protected override void Move() {
         if (chooseNewPoint) {
-            Vector3 nextPosition = new Vector3(
-                    Random.Range(-GameManager.groundHalfExtents.x, GameManager.groundHalfExtents.x),
-                    Random.Range(-GameManager.groundHalfExtents.y, GameManager.groundHalfExtents.y),
-                    transform.position.z
-                );
-
+            Vector3 nextPosition = GameManager.GetPointInArena(Vector2.one * (GetComponent<SphereCollider>().radius + 0.5f));
             movementCoroutine = StartCoroutine(MoveToPoint(nextPosition));
-
             chooseNewPoint = false;
         }
     }

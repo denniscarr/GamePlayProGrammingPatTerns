@@ -13,12 +13,12 @@ public class ApproachEnemy : Enemy {
         currentSineValue = Random.Range(-100f, 100f);
     }
 
-    protected override void Update() {
-        base.Update();
+    public override void Run() {
+        base.Run();
         currentSineValue += sineSpeed * Time.deltaTime;
     }
 
-    protected override void Spawn() {
+    public override void Spawn() {
     }
 
     protected override void Move() {

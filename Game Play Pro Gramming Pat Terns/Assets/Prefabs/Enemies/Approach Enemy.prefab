@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 135028181257392924}
   - component: {fileID: 95107485836176940}
   m_Layer: 9
-  m_Name: Teleport Enemy
+  m_Name: Approach Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,6 +298,7 @@ MonoBehaviour:
     type: 2}
   knockbackSpeed: 50
   m_State: 0
+  isDead: 0
   meshParent: {fileID: 1522979344275596}
   maxSineAngle: 45
   sineSpeed: 0.1

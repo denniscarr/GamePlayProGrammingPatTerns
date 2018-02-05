@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Services : MonoBehaviour {
     public static HitPause hitPause;
+    public static EnemyManager enemyManager;
 
-    private void Awake() {
+    public static void LocateAll() {
         hitPause = FindObjectOfType<HitPause>();
+        enemyManager = FindObjectOfType<EnemyManager>();
     }
 }

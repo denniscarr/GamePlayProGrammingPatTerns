@@ -28,17 +28,19 @@ public abstract class Enemy : MonoBehaviour {
     private float healthRechargeRate = 0.3f;
     private float healthRechargeTimer = 0f;
 
+    [HideInInspector] public bool isDead = false;
+
     private float stunTimer;
 
     protected Rigidbody m_Rigidbody { get { return GetComponent<Rigidbody>(); } }
     protected Animator m_Animator { get { return GetComponent<Animator>(); } }
 
 
-    private void Awake() {
+    public void Initialize() {
         currentHealth = m_Stats.maxHealth;
     }
 
-    protected virtual void Update() {
+    public virtual void Run() {
         switch (m_State) {
             case State.Normal:
                 RechargeHealth();
@@ -51,7 +53,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
-    protected virtual void FixedUpdate() {
+    public virtual void FixedRun() {
         switch (m_State) {
             case State.Normal:
                 Move();
@@ -62,7 +64,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     // Sandbox methods.
-    protected abstract void Spawn();
+    public abstract void Spawn();
 
     protected abstract void Move();
 
@@ -80,7 +82,7 @@ public abstract class Enemy : MonoBehaviour {
     protected virtual void Die() {
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         Camera.main.GetComponent<ScreenShake>().SetShake(0.4f, 0.2f);
-        Destroy(gameObject);
+        isDead = true;
     }
 
 
