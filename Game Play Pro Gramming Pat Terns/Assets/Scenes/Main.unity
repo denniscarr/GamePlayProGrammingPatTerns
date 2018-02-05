@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 58980212}
   - component: {fileID: 58980211}
   m_Layer: 0
-  m_Name: pCube5
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -956,8 +956,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.9903651, g: 0.9632353, b: 1, a: 1}
+  m_Intensity: 1.1
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -1087,7 +1087,7 @@ MonoBehaviour:
     type: 2}
   chargeSpeed: 40
   chargeLength: 5
-  chargeCooldown: 0.7
+  chargeCooldown: 0.4
   chargingMesh: {fileID: 860705850}
   normalMesh: {fileID: 1826575948}
   m_AudioSource: {fileID: 1896515290}
@@ -1315,8 +1315,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.3
+  m_Color: {r: 1, g: 0.97068965, b: 0.875, a: 1}
+  m_Intensity: 0.24
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10

@@ -55,14 +55,16 @@ public class TeleportEnemy : Enemy {
     }
 
 
-    protected override void GetStunned() {
+    protected override void Stunned() {
         StopCoroutine(movementCoroutine);
-        base.GetStunned();
+        GetComponentInChildren<Rotator>().freezeRotation = true;
+        base.Stunned();
     }
 
 
     protected override void RecoverFromStun() {
         base.RecoverFromStun();
+        GetComponentInChildren<Rotator>().freezeRotation = false;
         chooseNewPoint = true;
     }
 

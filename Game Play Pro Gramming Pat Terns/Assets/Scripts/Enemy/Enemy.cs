@@ -20,7 +20,7 @@ public abstract class Enemy : MonoBehaviour {
             _currentHealth = value;
             _currentHealth = Mathf.Clamp(_currentHealth, 0, m_Stats.maxHealth);
             if (_currentHealth == 0) {
-                if (m_State == State.Normal) { GetStunned(); }
+                if (m_State == State.Normal) { Stunned(); }
             }
         }
     }
@@ -70,7 +70,7 @@ public abstract class Enemy : MonoBehaviour {
         StartCoroutine(BulletHitSequence());
     }
 
-    protected virtual void GetStunned() {
+    protected virtual void Stunned() {
         m_State = State.Stunned;
         Instantiate(getStunnedParticlesPrefab, transform.position, Quaternion.identity);
         m_Animator.SetBool("Is Stunned", true);

@@ -27,8 +27,8 @@ public class ApproachEnemy : Enemy {
         m_Rigidbody.AddForce(moveForce * m_Stats.accelerateSpeed * Time.fixedDeltaTime, ForceMode.Force);
     }
 
-    protected override void GetStunned() {
-        base.GetStunned();
+    protected override void Stunned() {
+        base.Stunned();
         foreach (Rotator rotator in meshParent.GetComponentsInChildren<Rotator>()) {
             rotator.freezeRotation = true;
         }
