@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class ApproachEnemy : Enemy {
 
-    [SerializeField] GameObject meshParent;
     [SerializeField] float maxSineAngle = 15f;
     [SerializeField] float sineSpeed = 1f;
     float currentSineValue = 0f;
 
-    private void Start() {
+    public override void Initialize() {
+        base.Initialize();
         currentSineValue = Random.Range(-100f, 100f);
+        foreach(Rotator rotator in meshParent.GetComponentsInChildren<Rotator>()) {
+            rotator.transform.rotation = Random.rotation;
+            rotator.relativeSpeed = new Vector3(
+                    rotator.relativeSpeed.x + Random.Range(-0.1f, 0.1f),
+                    rotator.relativeSpeed.y + Random.Range(-0.1f, 0.1f),
+                    rotator.relativeSpeed.z + Random.Range(-0.1f, 0.1f)
+                );
+        }
     }
 
     public override void Run() {
         base.Run();
         currentSineValue += sineSpeed * Time.deltaTime;
-    }
-
-    public override void Spawn() {
     }
 
     protected override void Move() {

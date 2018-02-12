@@ -10,11 +10,12 @@ public class EnemyManager : MonoBehaviour {
 
     [SerializeField] EnemyWave[] enemyWaves;
     int currentWave = 0;
-    List<Enemy> enemies = new List<Enemy>();
+    List<Enemy> activeEnemies = new List<Enemy>();
+    List<Enemy> backgroundEnemies = new List<Enemy>();
 
 
     public void Initialize() {
-        CreateWave();
+        CreateFirstWave();
     }
 
 
@@ -22,44 +23,90 @@ public class EnemyManager : MonoBehaviour {
         CheckForDeadEnemies();
 
         // If all enemies have been destroyed, spawn a new wave.
-        if (enemies.Count == 0) { CreateWave(); }
+        if (activeEnemies.Count == 0) { CreateNextWave(); }
 
-        for (int i = 0; i < enemies.Count; i++) { enemies[i].Run(); }
+        for (int i = 0; i < activeEnemies.Count; i++) { activeEnemies[i].Run(); }
+        for (int i = 0; i < backgroundEnemies.Count; i++) { backgroundEnemies[i].Run(); }
     }
 
 
     public void FixedRun() {
-        for (int i = 0; i < enemies.Count; i++) { enemies[i].FixedRun(); }
+        for (int i = 0; i < activeEnemies.Count; i++) { activeEnemies[i].FixedRun(); }
+        for (int i = 0; i < backgroundEnemies.Count; i++) { backgroundEnemies[i].FixedRun(); }
     }
 
 
-    void CreateWave() {
-        EnemyWave newWave = enemyWaves[currentWave];
+    void CreateFirstWave() {
+        // Instantiate all active enemies.
+        InstantiateAllEnemiesInWave(enemyWaves[0], false);
 
-        for (int i = 0; i < newWave.approachEnemies; i++) { CreateEnemy(approachEnemyPrefab); }
-        for (int i = 0; i < newWave.teleportEnemies; i++) { CreateEnemy(teleportEnemyPrefab); }
+        for (int i = 0; i < activeEnemies.Count; i++) {
+            activeEnemies[i].Initialize();
+            activeEnemies[i].EnterBackgroundInstant();
+            activeEnemies[i].SpawnFromBackground();
+        }
 
-        for (int i = 0; i < enemies.Count; i++) { enemies[i].Initialize(); }
+        // Instantiate all background enemies.
+        InstantiateAllEnemiesInWave(enemyWaves[1], true);
+        for (int i = 0; i < backgroundEnemies.Count; i++) {
+            backgroundEnemies[i].Initialize();
+            backgroundEnemies[i].EnterBackground();
+        }
+
+        Debug.Log("background enemies: " + backgroundEnemies.Count);
+
         currentWave++;
     }
 
 
-    void CreateEnemy(GameObject enemyPrefab) {
+    void CreateNextWave() {
+        // Move all background enemies to foreground.
+        for (int i = 0; i < backgroundEnemies.Count; i++) {
+            backgroundEnemies[i].SpawnFromBackground();
+            activeEnemies.Add(backgroundEnemies[i]);
+        }
+
+        backgroundEnemies.Clear();
+
+        // Instantiate enemies from next wave and move them into the background.
+        if (enemyWaves[currentWave + 1] != null) {
+            EnemyWave nextWave = enemyWaves[currentWave + 1];
+
+            // Instantiate each enemy in the next wave.
+            InstantiateAllEnemiesInWave(nextWave, true);
+
+            // Have all enemies in next wave enter background.
+            for (int i = 0; i < backgroundEnemies.Count; i++) {
+                backgroundEnemies[i].Initialize();
+                backgroundEnemies[i].EnterBackground();
+            }
+        }
+
+        currentWave++;
+    }
+
+
+    void CreateEnemy(GameObject enemyPrefab, bool putInBackground) {
         Vector3 newEnemyPosition = GameManager.GetPointInArena(Vector2.one);
         GameObject newEnemy = Instantiate(enemyPrefab, newEnemyPosition, Quaternion.identity);
-        newEnemy.GetComponent<Enemy>().Spawn();
-        enemies.Add(newEnemy.GetComponent<Enemy>());
+
+        if (putInBackground) { backgroundEnemies.Add(newEnemy.GetComponent<Enemy>()); }
+        else { activeEnemies.Add(newEnemy.GetComponent<Enemy>()); }
     }
 
 
     void CheckForDeadEnemies() {
-        for (int i = 0; i < enemies.Count; i++) {
-            if (enemies[i].isDead) {
-                Debug.Log("Destroying enemy");
-                Destroy(enemies[i].gameObject);
-                enemies.Remove(enemies[i]);
+        for (int i = 0; i < activeEnemies.Count; i++) {
+            if (activeEnemies[i].isDead) {
+                Destroy(activeEnemies[i].gameObject);
+                activeEnemies.Remove(activeEnemies[i]);
             }
         }
+    }
+
+    void InstantiateAllEnemiesInWave(EnemyWave wave, bool putInBackground) {
+        for (int i = 0; i < wave.approachEnemies; i++) { CreateEnemy(approachEnemyPrefab, putInBackground); }
+        for (int i = 0; i < wave.teleportEnemies; i++) { CreateEnemy(teleportEnemyPrefab, putInBackground); }
     }
 }
 

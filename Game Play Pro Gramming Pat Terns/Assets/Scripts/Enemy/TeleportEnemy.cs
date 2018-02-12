@@ -9,12 +9,10 @@ public class TeleportEnemy : Enemy {
 
     public override void Run() {
         base.Run();
+
+        if (m_State == State.InBackground || m_State == State.Spawning) { meshParent.GetComponent<ScaleFuckerUpper>().enabled = false; }
+        else { meshParent.GetComponent<ScaleFuckerUpper>().enabled = true; }
     }
-
-
-    public override void Spawn() {
-    }
-
 
     protected override void Move() {
         if (chooseNewPoint) {
@@ -23,7 +21,6 @@ public class TeleportEnemy : Enemy {
             chooseNewPoint = false;
         }
     }
-
 
     IEnumerator MoveToPoint(Vector3 pointToMoveTo) {
 

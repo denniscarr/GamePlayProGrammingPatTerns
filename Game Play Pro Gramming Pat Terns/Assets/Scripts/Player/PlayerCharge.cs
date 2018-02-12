@@ -14,7 +14,12 @@ public class PlayerCharge : MonoBehaviour {
     [SerializeField] AudioSource m_AudioSource;
 
     [HideInInspector] public bool isCharging;
+
+    [HideInInspector] public bool chargeBuffered = false;
     float cooldownTimer;
+    Vector3 lastChargeDirection;
+    Coroutine chargeCoroutine;
+
     Rigidbody m_Rigidbody;
 
 
@@ -25,16 +30,44 @@ public class PlayerCharge : MonoBehaviour {
 
 
     private void Update() {
-        cooldownTimer += Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Space) && cooldownTimer >= chargeCooldown) {
-            StartCoroutine(Charge());
-            cooldownTimer = 0f;
+
+        if (chargeBuffered) {
+            Vector3 directionalInput = Vector2.zero;
+            directionalInput.x = Input.GetAxisRaw("Horizontal");
+            directionalInput.y = Input.GetAxisRaw("Vertical");
+
+            if (directionalInput != Vector3.zero && directionalInput != lastChargeDirection) {
+                Vector3 chargeDirection = transform.position + directionalInput.normalized;
+                transform.LookAt(chargeDirection);
+                StopCoroutine(chargeCoroutine);
+                chargeCoroutine = StartCoroutine(Charge());
+                chargeBuffered = false;
+            }
+        }
+        
+        else {
+            cooldownTimer += Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.Space) && cooldownTimer >= chargeCooldown) {
+                chargeCoroutine = StartCoroutine(Charge());
+                cooldownTimer = 0f;
+            }
         }
     }
 
 
+    void CheckForEndOfChargeExtension() {
+        if (!chargeBuffered) { return; }
+
+        StopCoroutine(chargeCoroutine);
+        chargeCoroutine = StartCoroutine(Charge());
+        chargeBuffered = false;
+    }
+    
+
     IEnumerator Charge() {
         GetComponent<PlayerController>().isAcceptingInput = false;
+        lastChargeDirection = transform.forward;
+        m_Rigidbody.velocity = Vector3.zero;
         isCharging = true;
         float distanceCharged = 0f;
         normalMesh.SetActive(false);
@@ -58,6 +91,8 @@ public class PlayerCharge : MonoBehaviour {
 
         chargingMesh.SetActive(false);
         normalMesh.SetActive(true);
+
+        CheckForEndOfChargeExtension();
 
         yield return null;
     }

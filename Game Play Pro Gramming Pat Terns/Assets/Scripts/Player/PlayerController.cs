@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour {
         directionalInput = Vector3.zero;
         directionalInput.x = Input.GetAxisRaw("Horizontal");
         directionalInput.y = Input.GetAxisRaw("Vertical");
+
+        if (directionalInput == Vector3.zero) { m_Rigidbody.velocity = Vector3.zero; }
     }
 
 

@@ -7,7 +7,7 @@ public class ScaleFuckerUpper : MonoBehaviour {
     [SerializeField] Vector3 maxChange = new Vector3(0f, 0f, 0f);
     Vector3 originalScale;
 
-    private void Start() {
+    private void Awake() {
         originalScale = transform.localScale;
     }
 

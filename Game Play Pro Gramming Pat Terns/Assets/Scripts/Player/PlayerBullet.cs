@@ -54,7 +54,7 @@ public class PlayerBullet : MonoBehaviour {
             } else {
                 Instantiate(hitEnemyParticlesPrefab, lastPosition, Quaternion.identity);
             }
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 

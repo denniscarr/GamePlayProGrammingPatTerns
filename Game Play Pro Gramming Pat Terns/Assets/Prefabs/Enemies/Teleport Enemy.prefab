@@ -201,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 307728c8db49cd34db17d2b9a045c271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 1630743854769452}
   m_Stats: {fileID: 11400000, guid: 3bef63fb1f1f2db4d96f0e3b28055584, type: 2}
   getStunnedParticlesPrefab: {fileID: 1170637520492226, guid: da019fbe52755c94aaeb82075fe10ae9,
     type: 2}
