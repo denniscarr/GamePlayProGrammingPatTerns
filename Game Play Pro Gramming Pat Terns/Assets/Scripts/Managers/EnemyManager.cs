@@ -7,6 +7,7 @@ public class EnemyManager : MonoBehaviour {
 
     [SerializeField] GameObject approachEnemyPrefab;
     [SerializeField] GameObject teleportEnemyPrefab;
+    [SerializeField] GameObject speedUpEnemyPrefab;
 
     [SerializeField] EnemyWave[] enemyWaves;
     int currentWave = 0;
@@ -52,8 +53,6 @@ public class EnemyManager : MonoBehaviour {
             backgroundEnemies[i].Initialize();
             backgroundEnemies[i].EnterBackground();
         }
-
-        Debug.Log("background enemies: " + backgroundEnemies.Count);
 
         currentWave++;
     }
@@ -107,6 +106,7 @@ public class EnemyManager : MonoBehaviour {
     void InstantiateAllEnemiesInWave(EnemyWave wave, bool putInBackground) {
         for (int i = 0; i < wave.approachEnemies; i++) { CreateEnemy(approachEnemyPrefab, putInBackground); }
         for (int i = 0; i < wave.teleportEnemies; i++) { CreateEnemy(teleportEnemyPrefab, putInBackground); }
+        for (int i = 0; i < wave.speedUpEnemies; i++) { CreateEnemy(speedUpEnemyPrefab, putInBackground); }
     }
 }
 
@@ -115,4 +115,5 @@ public class EnemyManager : MonoBehaviour {
 public class EnemyWave {
     public int approachEnemies;
     public int teleportEnemies;
+    public int speedUpEnemies;
 }

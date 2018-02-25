@@ -38,6 +38,9 @@ public abstract class Enemy : MonoBehaviour {
     private float healthRechargeTimer = 0f;
     [HideInInspector] public bool isDead = false;
 
+    protected float maxSpeed;
+    protected float accelerateSpeed;
+
     // Misc.
     private float stunTimer;
     Vector3 moveInBackgroundTarget;
@@ -53,8 +56,10 @@ public abstract class Enemy : MonoBehaviour {
         // Memorize original color.
         originalColor = m_MeshRenderers[0].material.color;
 
-        // Set current health.
+        // Get stats.
         currentHealth = m_Stats.maxHealth;
+        maxSpeed = m_Stats.maxSpeed;
+        accelerateSpeed = m_Stats.accelerateSpeed;
     }
 
     public virtual void Run() {
@@ -176,6 +181,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     protected virtual void Stunned() {
+        GameEventManager.instance.FireEvent(new GameEvents.EnemyStunned());
         m_State = State.Stunned;
         Instantiate(getStunnedParticlesPrefab, transform.position, Quaternion.identity);
         m_Animator.SetBool("Is Stunned", true);
@@ -185,15 +191,16 @@ public abstract class Enemy : MonoBehaviour {
     protected virtual void Die() {
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         Camera.main.GetComponent<ScreenShake>().SetShake(0.4f, 0.2f);
+        GameEventManager.instance.FireEvent(new GameEvents.EnemyDied());
         isDead = true;
     }
 
 
     // Tool methods:
     protected Vector3 SteerTowards(Vector3 target) {
-        m_Rigidbody.velocity = Vector3.ClampMagnitude(m_Rigidbody.velocity, m_Stats.maxSpeed);
+        m_Rigidbody.velocity = Vector3.ClampMagnitude(m_Rigidbody.velocity, maxSpeed);
         Vector3 desiredVelocity = Vector3.Normalize(target - transform.position);
-        desiredVelocity *= m_Stats.maxSpeed;
+        desiredVelocity *= maxSpeed;
         Vector3 turnForce = desiredVelocity - m_Rigidbody.velocity;
         return (turnForce);
     }
@@ -225,6 +232,7 @@ public abstract class Enemy : MonoBehaviour {
 
 
     protected virtual void RecoverFromStun() {
+        GameEventManager.instance.FireEvent(new GameEvents.EnemyRecoveredFromStun());
         StartCoroutine(RecoverFromStunSequence());
     }
 

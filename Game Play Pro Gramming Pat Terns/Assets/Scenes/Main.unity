@@ -134,10 +134,10 @@ Transform:
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 1591719122}
+  - {fileID: 1553729829}
   - {fileID: 1877474576}
   - {fileID: 868449755}
   - {fileID: 573268522}
-  - {fileID: 1553729829}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -310,6 +310,52 @@ Transform:
   m_PrefabParentObject: {fileID: 4372901093459860, guid: 79a29db4f361d2241af5c2de79db8167,
     type: 2}
   m_PrefabInternal: {fileID: 1013646127}
+--- !u!1001 &553748655
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652367905703792, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1148110152754648, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: a523f3f6352ba8745bd9227da830dfa1, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &573268521
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +383,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8398188}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &573268523
 MonoBehaviour:
@@ -836,7 +882,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8398188}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &868449756
 MonoBehaviour:
@@ -1010,6 +1056,7 @@ MonoBehaviour:
   normalMesh: {fileID: 1826575948}
   m_AudioSource: {fileID: 1896515290}
   isCharging: 0
+  chargeBuffered: 0
 --- !u!114 &897886212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1818,7 +1865,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8398188}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1553729830
 MonoBehaviour:
@@ -1835,17 +1882,27 @@ MonoBehaviour:
     type: 2}
   teleportEnemyPrefab: {fileID: 1662968322812134, guid: fc70fba153d28c742a92f7dfb6584944,
     type: 2}
+  speedUpEnemyPrefab: {fileID: 1148110152754648, guid: a523f3f6352ba8745bd9227da830dfa1,
+    type: 2}
   enemyWaves:
-  - approachEnemies: 2
+  - approachEnemies: 0
     teleportEnemies: 0
+    speedUpEnemies: 4
   - approachEnemies: 4
     teleportEnemies: 0
+    speedUpEnemies: 0
   - approachEnemies: 0
     teleportEnemies: 3
+    speedUpEnemies: 0
   - approachEnemies: 2
     teleportEnemies: 2
+    speedUpEnemies: 0
   - approachEnemies: 3
     teleportEnemies: 2
+    speedUpEnemies: 0
+  - approachEnemies: 0
+    teleportEnemies: 5
+    speedUpEnemies: 0
 --- !u!1 &1591719121
 GameObject:
   m_ObjectHideFlags: 0
@@ -2419,7 +2476,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8398188}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1877474577
 MonoBehaviour:

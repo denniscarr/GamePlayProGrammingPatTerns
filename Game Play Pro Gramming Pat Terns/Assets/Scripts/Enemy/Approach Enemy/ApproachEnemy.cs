@@ -11,6 +11,7 @@ public class ApproachEnemy : Enemy {
     public override void Initialize() {
         base.Initialize();
         currentSineValue = Random.Range(-100f, 100f);
+
         foreach(Rotator rotator in meshParent.GetComponentsInChildren<Rotator>()) {
             rotator.transform.rotation = Random.rotation;
             rotator.relativeSpeed = new Vector3(
