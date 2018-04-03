@@ -47,7 +47,8 @@ public class PlayerBullet : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider collider) {
-        if (collider.GetComponent<Enemy>() != null) {
+        bool isEnemy = collider.GetComponent<Enemy>();
+        if (isEnemy) {
             collider.GetComponent<Enemy>().GetHitByBullet();
             if (collider.GetComponent<Enemy>().m_State == Enemy.State.Stunned) {
                 Instantiate(hitStunnedEnemyParticlesPrefab, lastPosition, Quaternion.identity);

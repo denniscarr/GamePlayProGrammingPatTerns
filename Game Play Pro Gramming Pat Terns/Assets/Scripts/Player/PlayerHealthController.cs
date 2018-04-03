@@ -37,7 +37,8 @@ public class PlayerHealthController : MonoBehaviour {
 
 
     private void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() && !chargeController.isCharging) {
+        bool isEnemy = other.GetComponent<Enemy>() | LayerMask.LayerToName(other.gameObject.layer) == "Enemy";
+        if (isEnemy && !chargeController.isCharging) {
             Die();
         }
     }

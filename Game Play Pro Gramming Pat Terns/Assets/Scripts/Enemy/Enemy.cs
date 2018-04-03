@@ -44,23 +44,32 @@ public abstract class Enemy : MonoBehaviour {
     // Misc.
     private float stunTimer;
     Vector3 moveInBackgroundTarget;
-    private Color originalColor;
+    protected Color originalColor;
 
     // Component getters
     protected Rigidbody m_Rigidbody { get { return GetComponent<Rigidbody>(); } }
-    Collider[] m_Colliders { get { return GetComponents<Collider>(); } }
+    protected virtual Collider[] m_Colliders { get { return GetComponents<Collider>(); } }
     protected Animator m_Animator { get { return GetComponent<Animator>(); } }
     MeshRenderer[] m_MeshRenderers { get { return meshParent.GetComponentsInChildren<MeshRenderer>(); } }
 
+
     public virtual void Initialize() {
         // Memorize original color.
-        originalColor = m_MeshRenderers[0].material.color;
+        MemorizeOriginalColor();
 
         // Get stats.
         currentHealth = m_Stats.maxHealth;
         maxSpeed = m_Stats.maxSpeed;
         accelerateSpeed = m_Stats.accelerateSpeed;
     }
+
+
+    protected virtual void MemorizeOriginalColor() {
+        if (m_MeshRenderers.Length > 0) {
+            originalColor = m_MeshRenderers[0].material.color;
+        }
+    }
+
 
     public virtual void Run() {
         switch (m_State) {
@@ -77,6 +86,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+
     public virtual void FixedRun() {
         switch (m_State) {
             case State.Normal:
@@ -90,6 +100,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+
     // Sandbox methods.
 
     public void EnterBackground() {
@@ -97,44 +108,37 @@ public abstract class Enemy : MonoBehaviour {
         meshParent.transform.localScale = Vector3.one * 10f;
 
         // Handle colors.
-        foreach (MeshRenderer meshRenderer in m_MeshRenderers) {
-            // Set material to full transparency.
-            Color newColor = meshRenderer.material.color;
-            newColor.a = 0f;
-            meshRenderer.material.color = newColor;
-
-            // Tween material to background transparency.
-            newColor.a = 0.1f;
-            float tweenDuration = 3f;
-            meshRenderer.material.DOColor(newColor, tweenDuration);
-        }
+        SetRenderersAlpha(0f);
+        FadeRenderers(new Color(originalColor.r, originalColor.g, originalColor.b, 0.1f), 3f);
 
         // Disable collider.
-        foreach (Collider collider in m_Colliders) { collider.enabled = false; }
+        SetCollidersEnabled(false);
 
         // Set AI State
         moveInBackgroundTarget = GameManager.GetPointInArena(Vector2.one * 2f);
         m_State = State.InBackground;
     }
+
 
     public void EnterBackgroundInstant() {
         // Set size to background size.
         meshParent.transform.localScale = Vector3.one * 10f;
 
-        foreach (MeshRenderer meshRenderer in m_MeshRenderers) {
-            // Set material transparency.
-            Color newColor = originalColor;
-            newColor.a = 0.1f;
-            meshRenderer.material.color = newColor;
-        }
+        SetRenderersAlpha(0.01f);
 
         // Disable collider.
-        foreach (Collider collider in m_Colliders) { collider.enabled = false; }
+        SetCollidersEnabled(false);
 
         // Set AI State
         moveInBackgroundTarget = GameManager.GetPointInArena(Vector2.one * 2f);
         m_State = State.InBackground;
     }
+
+
+    protected virtual void SetCollidersEnabled(bool value) {
+        foreach (Collider collider in m_Colliders) { collider.enabled = value; }
+    }
+
 
     void MoveInBackground() {
         if (Vector3.Distance(transform.position, moveInBackgroundTarget) >= 1f) {
@@ -144,11 +148,13 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+
     public virtual void SpawnFromBackground() {
         m_State = State.Spawning;
         m_Rigidbody.velocity = Vector3.zero;
         StartCoroutine(SpawningCoroutine());
     }
+
 
     IEnumerator SpawningCoroutine() {
         // Shrink down to orignal size and regain most opacity.
@@ -158,7 +164,7 @@ public abstract class Enemy : MonoBehaviour {
 
         Color newColor = originalColor;
         newColor.a *= 0.8f;
-        foreach (MeshRenderer meshRenderer in m_MeshRenderers) { meshRenderer.material.DOColor(originalColor, duration); }
+        FadeRenderers(originalColor, duration);
         yield return new WaitForSeconds(duration);
 
         // Wait a moment.
@@ -169,10 +175,34 @@ public abstract class Enemy : MonoBehaviour {
         foreach (MeshRenderer meshRenderer in m_MeshRenderers) { meshRenderer.material.DOColor(originalColor, duration); }
         yield return new WaitForSeconds(duration);
 
-        foreach(Collider collider in m_Colliders) { collider.enabled = true; }
+        SetCollidersEnabled(true);
         m_State = State.Normal;
         yield return null;
     }
+
+
+    protected virtual void SetRenderersAlpha(float value) {
+        foreach (MeshRenderer meshRenderer in m_MeshRenderers) {
+            // Set material transparency.
+            Color newColor = originalColor;
+            newColor.a = value;
+            meshRenderer.material.color = newColor;
+        }
+    }
+
+
+    protected virtual void FadeRenderers(Color targetColor, float duration) {
+        foreach (MeshRenderer meshRenderer in m_MeshRenderers) { meshRenderer.material.DOColor(targetColor, duration); }
+    }
+
+
+    //void Spawn() {
+    //    ProcessManager pm = new ProcessManager();
+
+    //    pm.AddProcess(new ActionProcess(() => Debug.Log("hi")))
+    //        .Then(new WaitProcess(0.5f))
+    //        .Then(new ActionProcess() => Debug.Log("bye"));
+    //}
 
     protected abstract void Move();
 
