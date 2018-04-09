@@ -98,11 +98,7 @@ public class PlayerCharge : MonoBehaviour {
     }
 
 
-    private void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Enemy>() && isCharging) {
-            Vector3 hitLocation = other.ClosestPoint(transform.position);
-            Instantiate(enemyHitParticles, hitLocation, Quaternion.identity);
-            other.GetComponent<Enemy>().GetHitByCharge();
-        }
+    public void ShowHitParticles(Vector3 hitPoint) {
+        Instantiate(enemyHitParticles, hitPoint, Quaternion.identity);
     }
 }

@@ -33,16 +33,16 @@ public abstract class Enemy : MonoBehaviour {
             }
         }
     }
-    private bool freezeHealthRecharge;
+    protected bool freezeHealthRecharge;
     private float healthRechargeRate = 0.3f;
-    private float healthRechargeTimer = 0f;
+    protected float healthRechargeTimer = 0f;
     [HideInInspector] public bool isDead = false;
 
     protected float maxSpeed;
     protected float accelerateSpeed;
 
     // Misc.
-    private float stunTimer;
+    protected float stunTimer;
     Vector3 moveInBackgroundTarget;
     protected Color originalColor;
 
@@ -181,6 +181,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
 
+
     protected virtual void SetRenderersAlpha(float value) {
         foreach (MeshRenderer meshRenderer in m_MeshRenderers) {
             // Set material transparency.
@@ -206,8 +207,14 @@ public abstract class Enemy : MonoBehaviour {
 
     protected abstract void Move();
 
-    public virtual void GetHitByBullet() {
+    public virtual void GetHitByBullet(PlayerBullet bullet) {
         StartCoroutine(BulletHitSequence());
+
+        if (m_State == State.Stunned) {
+            bullet.ShowStunnedHitParticles();
+        } else {
+            bullet.ShowHitParticles();
+        }
     }
 
     protected virtual void Stunned() {
@@ -277,7 +284,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
 
-    protected IEnumerator BulletHitSequence() {
+    protected virtual IEnumerator BulletHitSequence() {
 
         m_Animator.SetTrigger("Hurt Trigger");
 
@@ -300,12 +307,13 @@ public abstract class Enemy : MonoBehaviour {
     }
 
 
-    public void GetHitByCharge() {
+    public virtual void GetHitByCharge(PlayerCharge charge, Vector3 chargeHitPoint) {
+        charge.ShowHitParticles(chargeHitPoint);
         StartCoroutine(GetHitByChargeCoroutine());
     }
 
 
-    IEnumerator GetHitByChargeCoroutine() {
+    protected IEnumerator GetHitByChargeCoroutine() {
         currentHealth -= 5;
 
         bool willDie = false;
@@ -346,5 +354,16 @@ public abstract class Enemy : MonoBehaviour {
         }
         
         yield return null;
+    }
+
+    protected void OnTriggerEnter(Collider other) {
+        if (other.GetComponent<PlayerBullet>() != null) {
+            GetHitByBullet(other.GetComponent<PlayerBullet>());
+        }
+
+        else if (other.GetComponent<PlayerCharge>() != null) {
+            Debug.Log(gameObject.name + " was hit by charge.");
+            GetHitByCharge(other.GetComponent<PlayerCharge>(), other.ClosestPoint(transform.position));
+        }
     }
 }

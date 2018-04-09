@@ -13,7 +13,10 @@ public class BossEnemy : Enemy {
     [SerializeField] Rotator armRotator;
     [SerializeField] FloatRange rotateSpeedRange = new FloatRange(7f, 15f);
 
+    [HideInInspector] public bool isCoreVulnerable = false;
+
     StateMachine<BossEnemy> stateMachine;
+
     protected override Collider[] m_Colliders { get { return colliderParent.GetComponentsInChildren<Collider>(); } }
     private Collider[] m_Triggers { get { return triggersParent.GetComponentsInChildren<Collider>(); } }
     private List<SkinnedMeshRenderer> m_SkinnedMeshRenderers = new List<SkinnedMeshRenderer>();
@@ -63,7 +66,11 @@ public class BossEnemy : Enemy {
 
     protected override void SetCollidersEnabled(bool value) {
         base.SetCollidersEnabled(value);
-        foreach(Collider trigger in m_Triggers) { trigger.enabled = value; }
+        foreach(Collider trigger in m_Triggers) {
+            if (!(trigger is SphereCollider)) {
+                trigger.enabled = value;
+            }
+        }
     }
 
 
@@ -86,8 +93,7 @@ public class BossEnemy : Enemy {
     }
 
 
-    public void SetArmRotationSpeed(int deadArms) {
-        float newSpeed = MyMath.Map(deadArms, 0, 6, rotateSpeedRange.min, rotateSpeedRange.max);
+    public void SetArmRotationSpeed(float newSpeed) {
         armRotator.relativeSpeed = new Vector3(0f, newSpeed, 0f);
     }
 
@@ -95,6 +101,57 @@ public class BossEnemy : Enemy {
     public void Shoot() {
         foreach (BossArm arm in arms) {
             arm.Shoot(bulletPrefab);
+        }
+    }
+
+
+    //void OnReportedTriggerEnter(Collider other) {
+    //    OnTriggerEnter(other);
+    //}
+
+
+    public override void GetHitByBullet(PlayerBullet bullet) {
+        if (!isCoreVulnerable) { return; }
+
+        StartCoroutine(BulletHitSequence());
+
+        if (m_State == State.Stunned) {
+            bullet.ShowStunnedHitParticles();
+        } else {
+            bullet.ShowHitParticles();
+        }
+    }
+
+
+    public override void GetHitByCharge(PlayerCharge charge, Vector3 chargeHitPoint) {
+        if (!isCoreVulnerable) { return; }
+
+        Debug.Log("boss enemy hit by charge.");
+
+        charge.ShowHitParticles(chargeHitPoint);
+        StartCoroutine(GetHitByChargeCoroutine());
+    }
+
+
+    protected override IEnumerator BulletHitSequence() {
+
+        m_Animator.SetTrigger("Hurt Trigger");
+
+        switch (m_State) {
+            case (State.Normal):
+                m_Rigidbody.velocity = Vector3.zero;
+                currentHealth--;
+                freezeHealthRecharge = true;
+                healthRechargeTimer = 0;
+
+                yield return new WaitForSeconds(0.1f);
+
+                freezeHealthRecharge = false;
+                break;
+
+            case (State.Stunned):
+                stunTimer -= 0.1f;
+                break;
         }
     }
 
@@ -128,7 +185,9 @@ public class BossEnemy : Enemy {
                 if (Context.arms[i].iAmAStump) { deadArms++; }
             }
 
-            Context.SetArmRotationSpeed(deadArms);
+            float newSpeed = MyMath.Map(deadArms, 0, 6, Context.rotateSpeedRange.min, Context.rotateSpeedRange.max);
+            Context.SetArmRotationSpeed(newSpeed);
+
             howOftenToShoot = MyMath.Map(deadArms, 0, 5, howOftenToShootRange.min, howOftenToShootRange.max);
 
             if (deadArms == 6) { TransitionTo<ChaseState>(); }
@@ -138,8 +197,19 @@ public class BossEnemy : Enemy {
 
     private class ChaseState : BossEnemyState {
 
+        public override void OnEnter() {
+            base.OnEnter();
+
+            Context.SetArmRotationSpeed(200f);
+            Context.accelerateSpeed = 30f;
+            Context.maxSpeed = 100f;
+
+            Context.isCoreVulnerable = true;
+        }
+
         public override void Update() {
-            Debug.Log(":-)");
+            Vector3 moveForce = Context.SteerTowards(PlayerController.m_Transform.position);
+            Context.m_Rigidbody.AddForce(moveForce * Context.m_Stats.accelerateSpeed * Time.fixedDeltaTime, ForceMode.Force);
         }
     }
 }

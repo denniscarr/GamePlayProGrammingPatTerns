@@ -46,17 +46,11 @@ public class PlayerBullet : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider collider) {
-        bool isEnemy = collider.GetComponent<Enemy>();
-        if (isEnemy) {
-            collider.GetComponent<Enemy>().GetHitByBullet();
-            if (collider.GetComponent<Enemy>().m_State == Enemy.State.Stunned) {
-                Instantiate(hitStunnedEnemyParticlesPrefab, lastPosition, Quaternion.identity);
-            } else {
-                Instantiate(hitEnemyParticlesPrefab, lastPosition, Quaternion.identity);
-            }
-            //Destroy(gameObject);
-        }
+    public void ShowHitParticles() {
+        Instantiate(hitEnemyParticlesPrefab, lastPosition, Quaternion.identity);
     }
 
+    public void ShowStunnedHitParticles() {
+        Instantiate(hitStunnedEnemyParticlesPrefab, lastPosition, Quaternion.identity);
+    }
 }
