@@ -103,6 +103,11 @@ public abstract class Enemy : MonoBehaviour {
 
     // Sandbox methods.
 
+    public float GetDistanceToPlayer() {
+        return Vector3.Distance(transform.position, PlayerController.m_Transform.position);
+    }
+
+
     public void EnterBackground() {
         // Set size to background size.
         meshParent.transform.localScale = Vector3.one * 10f;
@@ -181,7 +186,6 @@ public abstract class Enemy : MonoBehaviour {
     }
 
 
-
     protected virtual void SetRenderersAlpha(float value) {
         foreach (MeshRenderer meshRenderer in m_MeshRenderers) {
             // Set material transparency.
@@ -205,7 +209,15 @@ public abstract class Enemy : MonoBehaviour {
     //        .Then(new ActionProcess() => Debug.Log("bye"));
     //}
 
+
     protected abstract void Move();
+
+
+    public void MoveTowardPoint(Vector3 point) {
+        Vector3 moveForce = SteerTowards(point);
+        m_Rigidbody.AddForce(moveForce * m_Stats.accelerateSpeed * Time.fixedDeltaTime, ForceMode.Force);
+    }
+
 
     public virtual void GetHitByBullet(PlayerBullet bullet) {
         StartCoroutine(BulletHitSequence());
@@ -217,6 +229,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+
     protected virtual void Stunned() {
         GameEventManager.instance.FireEvent(new GameEvents.EnemyStunned());
         m_State = State.Stunned;
@@ -224,6 +237,7 @@ public abstract class Enemy : MonoBehaviour {
         m_Animator.SetBool("Is Stunned", true);
         stunTimer = 0f;
     }
+
 
     protected virtual void Die() {
         Instantiate(deathParticles, transform.position, Quaternion.identity);
@@ -356,13 +370,13 @@ public abstract class Enemy : MonoBehaviour {
         yield return null;
     }
 
+
     protected void OnTriggerEnter(Collider other) {
         if (other.GetComponent<PlayerBullet>() != null) {
             GetHitByBullet(other.GetComponent<PlayerBullet>());
         }
 
         else if (other.GetComponent<PlayerCharge>() != null) {
-            Debug.Log(gameObject.name + " was hit by charge.");
             GetHitByCharge(other.GetComponent<PlayerCharge>(), other.ClosestPoint(transform.position));
         }
     }

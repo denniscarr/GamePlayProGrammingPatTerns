@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ClassExamples {
+namespace BehaviorTree {
 
     /* A 'Node' is the basic building block of a behavior tree. It just needs to report success or failure (via a bool) when it's updated.
      * It takes a context variable so that we know what class/object to operate on. */

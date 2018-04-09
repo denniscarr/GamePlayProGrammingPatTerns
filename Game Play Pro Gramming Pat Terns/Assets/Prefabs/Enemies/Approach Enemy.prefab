@@ -289,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6313bb52397f43149a62c80b74c7fb49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshParent: {fileID: 1522979344275596}
   m_Stats: {fileID: 11400000, guid: e8d0c35fcfdade54b956aa8d50fd5d80, type: 2}
   getStunnedParticlesPrefab: {fileID: 1170637520492226, guid: da019fbe52755c94aaeb82075fe10ae9,
     type: 2}
@@ -299,9 +300,15 @@ MonoBehaviour:
   knockbackSpeed: 50
   m_State: 0
   isDead: 0
-  meshParent: {fileID: 1522979344275596}
   maxSineAngle: 45
   sineSpeed: 0.1
+  requiredPulses: 5
+  attackRange: 2.5
+  attackDistance: 5
+  attackSpeed: 10
+  isFleeing: 0
+  fleePoint: {x: 0, y: 0, z: 0}
+  timesPulsed: 0
 --- !u!114 &114139731966033678
 MonoBehaviour:
   m_ObjectHideFlags: 1
