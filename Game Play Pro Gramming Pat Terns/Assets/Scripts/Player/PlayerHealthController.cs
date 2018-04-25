@@ -19,6 +19,11 @@ public class PlayerHealthController : MonoBehaviour {
     }
 
 
+    private void OnEnable() {
+        GetComponent<Collider>().enabled = true;
+    }
+
+
     private void Update() {
         maxInvincibilityFrames -= Time.deltaTime;
     }
@@ -31,8 +36,10 @@ public class PlayerHealthController : MonoBehaviour {
 
     public void Die() {
         if (maxInvincibilityFrames > 0) { return; }
-        mesh.SetActive(false);
-        playerController.isAcceptingInput = false;
+        transform.localPosition = new Vector3(0f, 0f, transform.localPosition.z);
+        GetComponent<Collider>().enabled = false;
+        Services.enemyManager.DestroyAllExistingEnemies();
+        Services.sceneManager.PushScene<GameOverScreenScene>(new TransitionData(FindObjectOfType<ScoreDisplay>().score));
     }
 
 

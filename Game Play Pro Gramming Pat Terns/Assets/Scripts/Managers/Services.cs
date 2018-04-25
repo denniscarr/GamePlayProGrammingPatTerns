@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Services : MonoBehaviour {
+public class Services {
     public static HitPause hitPause;
     public static EnemyManager enemyManager;
-
-    public static void LocateAll() {
-        hitPause = FindObjectOfType<HitPause>();
-        enemyManager = FindObjectOfType<EnemyManager>();
-    }
+    public static SceneManager<TransitionData> sceneManager;
+    public static PrefabDatabase prefabDatabase;
 }

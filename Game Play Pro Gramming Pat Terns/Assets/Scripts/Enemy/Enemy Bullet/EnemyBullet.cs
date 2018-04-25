@@ -8,6 +8,9 @@ public class EnemyBullet : MonoBehaviour {
 
     [HideInInspector] public Vector3 direction;
 
+    private void Awake() {
+        transform.parent = GameObject.Find("Bullets").transform;
+    }
 
     private void FixedUpdate() {
         Vector3 newPosition = transform.position;

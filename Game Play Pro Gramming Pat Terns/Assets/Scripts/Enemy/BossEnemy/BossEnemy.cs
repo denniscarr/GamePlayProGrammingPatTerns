@@ -36,6 +36,7 @@ public class BossEnemy : Enemy {
 
 
     public override void Run() {
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0f);
         switch (m_State) {
             case State.Normal:
                 foreach (BossArm arm in arms) { arm.Run(); }
@@ -67,9 +68,9 @@ public class BossEnemy : Enemy {
     protected override void SetCollidersEnabled(bool value) {
         base.SetCollidersEnabled(value);
         foreach(Collider trigger in m_Triggers) {
-            if (!(trigger is SphereCollider)) {
+            //if (!(trigger is SphereCollider)) {
                 trigger.enabled = value;
-            }
+            //}
         }
     }
 
@@ -89,7 +90,7 @@ public class BossEnemy : Enemy {
     public void MoveAimlessly() {
         m_Rigidbody.AddForce(UnityEngine.Random.insideUnitCircle * accelerateSpeed, ForceMode.Acceleration);
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0f);
     }
 
 
@@ -139,7 +140,7 @@ public class BossEnemy : Enemy {
 
         switch (m_State) {
             case (State.Normal):
-                m_Rigidbody.velocity = Vector3.zero;
+                //m_Rigidbody.velocity = Vector3.zero;
                 currentHealth--;
                 freezeHealthRecharge = true;
                 healthRechargeTimer = 0;

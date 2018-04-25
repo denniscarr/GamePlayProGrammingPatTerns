@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  direction: {x: 0, y: 0, z: 0}
 --- !u!135 &135690693437484150
 SphereCollider:
   m_ObjectHideFlags: 1

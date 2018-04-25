@@ -7,7 +7,7 @@ public class BossArm : MonoBehaviour {
     public SkinnedMeshRenderer armMesh;
     [SerializeField] Collider myCollider;
 
-    private const int MAX_HEALTH = 10;
+    private const int MAX_HEALTH = 50;
     private int currentHealth;
     private int CurrentHealth {
         get { return currentHealth; }

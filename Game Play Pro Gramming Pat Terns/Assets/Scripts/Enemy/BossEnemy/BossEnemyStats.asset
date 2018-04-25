@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccc14c4d95149c54083ee6e3edc45f28, type: 3}
   m_Name: BossEnemyStats
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 30
   maxSpeed: 2.5
   accelerateSpeed: 2.5
   stunTime: 3

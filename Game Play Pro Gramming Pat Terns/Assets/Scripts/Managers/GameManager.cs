@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    ScoreDisplay scoreDisplay;
+
     public static Vector2 groundHalfExtents {
         get {
             Transform ground = GameObject.Find("Ground").transform;
@@ -16,13 +18,31 @@ public class GameManager : MonoBehaviour {
 
 
     private void Awake() {
-        Services.LocateAll();
+        SetUpEverything();
+    }
+
+
+    private void OnEnable() {
+        SetUpEverything();
+    }
+
+
+    void SetUpEverything() {
+        Services.hitPause = FindObjectOfType<HitPause>();
+        Services.enemyManager = FindObjectOfType<EnemyManager>();
         Services.enemyManager.Initialize();
+        scoreDisplay = FindObjectOfType<ScoreDisplay>();
+        scoreDisplay.score = 0;
+        scoreDisplay.SetScoreText(0);
     }
 
 
     private void Update() { 
         Services.enemyManager.Run();
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Services.sceneManager.PushScene<PauseScreenScene>();
+        }
     }
 
 

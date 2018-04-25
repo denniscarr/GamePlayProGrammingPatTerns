@@ -10,6 +10,8 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] GameObject speedUpEnemyPrefab;
     [SerializeField] GameObject bossEnemyPrefab;
 
+    [SerializeField] Transform enemyRoot;
+
     [SerializeField] EnemyWave[] enemyWaves;
     int currentWave = 0;
     List<Enemy> activeEnemies = new List<Enemy>();
@@ -17,7 +19,25 @@ public class EnemyManager : MonoBehaviour {
 
 
     public void Initialize() {
+        DestroyAllExistingEnemies();
+        currentWave = 0;
         CreateFirstWave();
+    }
+
+
+    public void DestroyAllExistingEnemies() {
+        if (activeEnemies.Count > 0) {
+            for (int i = activeEnemies.Count - 1; i >= 0; i--) {
+                Destroy(activeEnemies[i].gameObject);
+            }
+        }
+        activeEnemies.Clear();
+        if (backgroundEnemies.Count > 0) {
+            for (int i = backgroundEnemies.Count - 1; i >= 0; i--) {
+                Destroy(backgroundEnemies[i].gameObject);
+            }
+        }
+        backgroundEnemies.Clear();
     }
 
 
@@ -89,6 +109,7 @@ public class EnemyManager : MonoBehaviour {
     void CreateEnemy(GameObject enemyPrefab, bool putInBackground) {
         Vector3 newEnemyPosition = GameManager.GetPointInArena(Vector2.one);
         GameObject newEnemy = Instantiate(enemyPrefab, newEnemyPosition, Quaternion.identity);
+        newEnemy.transform.parent = enemyRoot;
 
         if (putInBackground) { backgroundEnemies.Add(newEnemy.GetComponent<Enemy>()); }
         else { activeEnemies.Add(newEnemy.GetComponent<Enemy>()); }

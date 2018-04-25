@@ -72,6 +72,8 @@ public abstract class Enemy : MonoBehaviour {
 
 
     public virtual void Run() {
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0f);
+
         switch (m_State) {
             case State.Normal:
                 RechargeHealth();

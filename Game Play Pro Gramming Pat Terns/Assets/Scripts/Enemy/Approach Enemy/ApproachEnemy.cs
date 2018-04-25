@@ -21,7 +21,6 @@ public class ApproachEnemy : Enemy {
     float currentSineValue = 0f;
 
 
-
     public override void Initialize() {
         base.Initialize();
         currentSineValue = UnityEngine.Random.Range(-100f, 100f);
@@ -192,7 +191,6 @@ public class ApproachEnemy : Enemy {
     /* Actions */
     private class FleeBehavior : Node<ApproachEnemy> {
         public override bool Update(ApproachEnemy context) {
-            Debug.Log("fleeing.");
             context.MoveTowardPoint(context.fleePoint);
             return true;
         }

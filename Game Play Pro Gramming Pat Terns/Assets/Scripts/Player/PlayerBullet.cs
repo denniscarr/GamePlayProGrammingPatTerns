@@ -16,6 +16,7 @@ public class PlayerBullet : MonoBehaviour {
     Vector3 lastPosition;
 
     private void Awake() {
+        transform.parent = GameObject.Find("Bullets").transform;
         m_Rigidbody = GetComponent<Rigidbody>();
     }
 
